@@ -1,1 +1,1 @@
-# -cybersecurity-studies
+# Cybersecurity-studies
