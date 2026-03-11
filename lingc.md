@@ -5,7 +5,7 @@
 
 ---
 
-## 📦 1. Bibliotecas e Diretivas
+## 1. Bibliotecas e Diretivas
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -15,7 +15,7 @@
 
 ---
 
-## 🔢 2. Tipos de Variáveis
+## 2. Tipos de Variáveis
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -28,7 +28,7 @@
 
 ---
 
-## 📥 3. Entrada e Saída
+## 3. Entrada e Saída
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -40,7 +40,7 @@
 
 ---
 
-## 🔀 4. Estruturas de Decisão
+## 4. Estruturas de Decisão
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -63,7 +63,7 @@ switch(opcao) {
 
 ---
 
-## 🔁 5. Estruturas de Repetição
+## 5. Estruturas de Repetição
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -91,7 +91,7 @@ do {
 
 ---
 
-## 🧮 6. Operadores
+## 6. Operadores
 
 | # | Operador | O que faz | Exemplo |
 |---|----------|-----------|---------|
@@ -114,7 +114,7 @@ printf("%d", a == b);  // 0 (falso)
 
 ---
 
-## 🏗️ 7. Funções
+## 7. Funções
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -136,7 +136,7 @@ f1.idade = 30;
 
 ---
 
-## 💾 8. Memória e Ponteiros
+## 8. Memória e Ponteiros
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -159,7 +159,7 @@ free(vetor);
 
 ---
 
-## 📁 9. Arquivos
+## 9. Arquivos
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -182,7 +182,7 @@ fclose(f);
 
 ---
 
-## 🧵 10. Strings (string.h)
+## 10. Strings (string.h)
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -203,7 +203,7 @@ strcat(nome, " C");               // "Simulador C"
 
 ---
 
-## 🎲 11. Matemática e Aleatório (math.h / stdlib.h)
+## 11. Matemática e Aleatório (math.h / stdlib.h)
 
 | # | Comando | O que faz | Exemplo |
 |---|---------|-----------|---------|
@@ -232,7 +232,7 @@ double pot    = pow(2.0, 8.0);  // 256.0
 
 ---
 
-## 💡 12. Formatadores do printf / scanf
+## 12. Formatadores do printf / scanf
 
 ```c
 %d    → inteiro (int)
@@ -252,7 +252,7 @@ double pot    = pow(2.0, 8.0);  // 256.0
 
 ---
 
-## 🖥️ 13. Comandos de Compilação (Terminal)
+## 13. Comandos de Compilação (Terminal)
 
 ```bash
 # Compilar um arquivo simples
