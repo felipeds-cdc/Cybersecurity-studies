@@ -1,454 +1,499 @@
-# 📘 Guia de Comandos Git & GitHub
-
-> Referência completa: essenciais, diários e resolução de problemas  
+```markdown
+# 🐙 Git & GitHub — Guia Completo de Comandos
+**github.com/felipeds-cdc**
 
 ---
 
-## 🚀 1. Configuração Inicial (fazer uma vez só)
+## ⚙️ 1. CONFIGURAÇÃO INICIAL
 
 ```bash
-# Define seu nome nos commits
-git config --global user.name "Seu Nome"
+# Identidade — obrigatório antes do primeiro commit
+git config --global user.name  "Felipe Diassis"
+git config --global user.email "felipe.ds@uni9.edu.br"
 
-# Define seu email (use o mesmo do GitHub)
-git config --global user.email "seu@email.com"
+# Editor padrão
+git config --global core.editor "code --wait"   # VS Code
+git config --global core.editor "nano"           # Nano
 
-# Define o VS Code como editor padrão
-git config --global core.editor "code --wait"
-
-# Visualiza todas as configurações salvas
+# Ver todas as configurações
 git config --list
+git config user.name                             # Ver config específica
+
+# Configurar chave SSH (recomendado para GitHub)
+ssh-keygen -t ed25519 -C "felipe.ds@uni9.edu.br"
+cat ~/.ssh/id_ed25519.pub                        # Copiar e colar no GitHub
+ssh -T git@github.com                            # Testar conexão SSH
 ```
 
 ---
 
-## 📁 2. Criando e Clonando Repositórios
+## 🏁 2. INICIANDO REPOSITÓRIO
 
 ```bash
-# Inicia um repositório Git na pasta atual
-git init
+# Criar repositório local
+git init                                         # Na pasta atual
+git init nome-projeto                            # Cria pasta + repositório
 
-# Clona um repositório do GitHub para sua máquina
-git clone https://github.com/usuario/repositorio.git
-
-# Clona em uma pasta com nome específico
-git clone https://github.com/usuario/repositorio.git minha-pasta
+# Clonar repositório existente
+git clone https://github.com/user/repo.git
+git clone git@github.com:user/repo.git           # Via SSH (recomendado)
+git clone https://github.com/user/repo.git pasta # Clona em pasta específica
+git clone --depth 1 https://github.com/user/repo # Clona só último commit
 ```
 
 ---
 
-## 📋 3. Comandos do Dia a Dia
-
-### Verificar status e histórico
+## 📸 3. COMMITS — O DIA A DIA
 
 ```bash
-# Mostra o estado atual dos arquivos (modificados, staged, etc.)
+# Ver status atual
 git status
+git status -s                                    # Versão resumida
 
-# Mostra histórico de commits
+# Adicionar arquivos para commit
+git add arquivo.py                               # Arquivo específico
+git add pasta/                                   # Pasta inteira
+git add .                                        # Tudo modificado
+git add *.py                                     # Todos arquivos .py
+git add -p                                       # Interativo — escolhe partes
+
+# Remover da área de stage (desfaz git add)
+git restore --staged arquivo.py
+git reset HEAD arquivo.py                        # Alternativa mais antiga
+
+# Fazer commit
+git commit -m "feat: adiciona port scanner em python"
+git commit -am "fix: corrige bug no scanner"     # Add + commit em um comando
+git commit --amend -m "mensagem corrigida"       # Edita último commit
+
+# Ver histórico
 git log
-
-# Histórico resumido em uma linha por commit
-git log --oneline
-
-# Histórico com gráfico de branches
-git log --oneline --graph --all
-
-# Mostra as diferenças dos arquivos modificados
-git diff
-
-# Mostra diferenças dos arquivos já em stage
-git diff --staged
-```
-
-### Adicionar e commitar
-
-```bash
-# Adiciona um arquivo específico ao stage
-git add arquivo.c
-
-# Adiciona todos os arquivos modificados ao stage
-git add .
-
-# Adiciona todos os arquivos de uma extensão
-git add *.c
-
-# Cria um commit com mensagem
-git commit -m "mensagem descrevendo o que foi feito"
-
-# Adiciona e commita ao mesmo tempo (apenas arquivos já rastreados)
-git commit -am "mensagem do commit"
-```
-
-### Boas mensagens de commit
-
-```bash
-# ✅ Exemplos de boas mensagens:
-git commit -m "feat: adiciona formulario de cadastro"
-git commit -m "fix: corrige erro de compilacao no main.c"
-git commit -m "docs: atualiza README com instrucoes"
-git commit -m "refactor: reorganiza funcoes do simulador"
-
-# ❌ Evite mensagens vagas como:
-# "update", "fix", "alterações", "commit"
+git log --oneline                                # Resumido, uma linha por commit
+git log --oneline --graph --all                  # Visual com branches
+git log --author="Felipe"                        # Filtrar por autor
+git log --since="2026-01-01"                     # A partir de uma data
+git log -p arquivo.py                            # Histórico de um arquivo
+git log --stat                                   # Arquivos alterados em cada commit
 ```
 
 ---
 
-## 🌿 4. Branches (Ramificações)
+## 🌿 4. BRANCHES
 
 ```bash
-# Lista todas as branches locais
-git branch
+# Listar branches
+git branch                                       # Branches locais
+git branch -r                                    # Branches remotas
+git branch -a                                    # Todas
 
-# Lista branches locais e remotas
-git branch -a
+# Criar branch
+git branch nome-branch
+git checkout -b nome-branch                      # Cria e já muda para ela
+git switch -c nome-branch                        # Forma moderna
 
-# Cria uma nova branch
-git branch nome-da-branch
+# Mudar de branch
+git checkout nome-branch
+git switch nome-branch                           # Forma moderna
 
-# Troca para uma branch existente
-git checkout nome-da-branch
+# Renomear branch
+git branch -m nome-antigo nome-novo
+git branch -m nome-novo                          # Renomeia a branch atual
 
-# Cria e já troca para a nova branch (atalho)
-git checkout -b nome-da-branch
+# Deletar branch
+git branch -d nome-branch                        # Seguro — só se já mergeada
+git branch -D nome-branch                        # Força deletar
 
-# Forma moderna de trocar de branch
-git switch nome-da-branch
-
-# Cria e troca (forma moderna)
-git switch -c nome-da-branch
-
-# Renomeia a branch atual
-git branch -m novo-nome
-
-# Deleta uma branch (após merge)
-git branch -d nome-da-branch
-
-# Deleta uma branch forçadamente
-git branch -D nome-da-branch
+# Deletar branch remota
+git push origin --delete nome-branch
 ```
 
 ---
 
-## 🔀 5. Merge e Rebase
+## 🔀 5. MERGE E REBASE
 
 ```bash
-# Une a branch especificada na branch atual
-git merge nome-da-branch
+# Merge — une branch na atual
+git merge nome-branch
+git merge --no-ff nome-branch                    # Força criar commit de merge
+git merge --squash nome-branch                   # Une todos commits em um só
+git merge --abort                                # Cancela merge com conflito
 
-# Merge sem fast-forward (mantém histórico da branch)
-git merge --no-ff nome-da-branch
+# Rebase — reescreve histórico
+git rebase main                                  # Rebasa branch atual em main
+git rebase --interactive HEAD~3                  # Edita últimos 3 commits
+git rebase --abort                               # Cancela rebase
+git rebase --continue                            # Continua após resolver conflito
 
-# Rebase: reaplica commits em cima de outra branch
-git rebase main
-
-# Cancela um rebase em andamento
-git rebase --abort
-
-# Continua rebase após resolver conflito
-git rebase --continue
+# Cherry-pick — pega commit específico de outra branch
+git cherry-pick abc1234                          # Aplica commit pelo hash
+git cherry-pick abc1234..def5678                 # Range de commits
 ```
 
 ---
 
-## ☁️ 6. Trabalhando com GitHub (Remoto)
+## 🌐 6. REMOTO — GITHUB
 
 ```bash
-# Mostra os repositórios remotos configurados
-git remote -v
+# Gerenciar remotos
+git remote -v                                    # Lista remotos configurados
+git remote add origin git@github.com:user/repo.git
+git remote remove origin
+git remote rename origin upstream
+git remote set-url origin git@github.com:user/novo-repo.git
 
-# Adiciona um repositório remoto
-git remote add origin https://github.com/usuario/repo.git
+# Enviar para o GitHub
+git push origin main                             # Envia branch main
+git push origin nome-branch                      # Envia branch específica
+git push -u origin main                          # Define upstream (primeira vez)
+git push --force                                 # Força push (cuidado!)
+git push --force-with-lease                      # Force push seguro
+git push origin --tags                           # Envia tags
 
-# Envia commits para o GitHub (primeiro envio)
-git push -u origin main
+# Receber do GitHub
+git fetch origin                                 # Baixa mas não aplica
+git fetch --all                                  # Baixa todos os remotos
+git pull origin main                             # Fetch + merge
+git pull --rebase origin main                    # Fetch + rebase
 
-# Envia commits após o primeiro push
-git push
-
-# Envia uma branch específica
-git push origin nome-da-branch
-
-# Baixa atualizações do GitHub (sem aplicar)
-git fetch
-
-# Baixa e aplica atualizações na branch atual
-git pull
-
-# Pull com rebase em vez de merge
-git pull --rebase
+# Ver diferença entre local e remoto
+git fetch origin
+git diff main origin/main
 ```
 
 ---
 
-## 📦 7. Stash (Guardar mudanças temporariamente)
+## 🏷️ 7. TAGS — VERSÕES
 
 ```bash
-# Guarda as mudanças atuais sem commitar
-git stash
+# Criar tag
+git tag v1.0                                     # Tag simples
+git tag -a v1.0 -m "Versão 1.0 estável"        # Tag anotada (recomendada)
+git tag -a v1.0 abc1234 -m "Tag em commit antigo"
 
-# Guarda com uma descrição
-git stash push -m "trabalho em progresso no formulario"
+# Listar e ver tags
+git tag
+git tag -l "v1.*"                                # Filtra por padrão
+git show v1.0
 
-# Lista todos os stashes salvos
+# Enviar tags
+git push origin v1.0                             # Tag específica
+git push origin --tags                           # Todas as tags
+
+# Deletar tag
+git tag -d v1.0                                  # Local
+git push origin --delete v1.0                    # Remota
+```
+
+---
+
+## 💾 8. STASH — GUARDAR TRABALHO TEMPORÁRIO
+
+```bash
+# Guardar modificações sem commitar
+git stash                                        # Guarda tudo
+git stash push -m "trabalho em progresso"        # Com descrição
+git stash push -u                                # Inclui arquivos novos
+
+# Listar stashes
 git stash list
 
-# Recupera o stash mais recente e o remove da lista
-git stash pop
+# Recuperar stash
+git stash pop                                    # Aplica e remove da lista
+git stash apply stash@{0}                        # Aplica mas mantém na lista
+git stash apply stash@{2}                        # Stash específico
 
-# Recupera um stash específico
-git stash apply stash@{2}
-
-# Deleta o stash mais recente
-git stash drop
-
-# Limpa todos os stashes
-git stash clear
+# Remover stash
+git stash drop stash@{0}                         # Remove um
+git stash clear                                  # Remove todos
 ```
 
 ---
 
-## 🏷️ 8. Tags (Versões)
+## 🔍 9. DIFF E COMPARAÇÕES
 
 ```bash
-# Lista todas as tags
-git tag
+# Ver o que mudou
+git diff                                         # Não staged vs working
+git diff --staged                                # Staged vs último commit
+git diff HEAD                                    # Tudo vs último commit
+git diff main feature-branch                     # Entre duas branches
+git diff abc1234 def5678                         # Entre dois commits
+git diff HEAD~1 HEAD                             # Último vs penúltimo commit
 
-# Cria uma tag simples
-git tag v1.0
+# Ver arquivos modificados
+git diff --name-only
+git diff --name-status
 
-# Cria uma tag com mensagem (anotada)
-git tag -a v1.0 -m "versao 1.0 do simulador"
-
-# Envia tags para o GitHub
-git push origin --tags
-
-# Deleta uma tag local
-git tag -d v1.0
-
-# Deleta uma tag no GitHub
-git push origin --delete v1.0
+# Comparar arquivo específico
+git diff HEAD arquivo.py
+git diff main..feature -- arquivo.py
 ```
 
 ---
 
-## 🔧 9. Resolvendo Problemas Comuns
+## ⏪ 10. DESFAZENDO COISAS
 
-### Desfazer o último commit (mantendo as alterações)
 ```bash
+# Descartar mudanças no arquivo (antes do git add)
+git restore arquivo.py
+git checkout -- arquivo.py                       # Forma antiga
+
+# Desfazer git add
+git restore --staged arquivo.py
+git reset HEAD arquivo.py
+
+# Desfazer último commit (mantém mudanças)
 git reset --soft HEAD~1
-```
 
-### Desfazer o último commit (descartando as alterações)
-```bash
+# Desfazer último commit (descarta mudanças do stage)
+git reset --mixed HEAD~1
+
+# Desfazer último commit (descarta TUDO — irreversível)
 git reset --hard HEAD~1
-```
 
-### Remover um arquivo do stage (sem deletar o arquivo)
-```bash
-git restore --staged arquivo.c
-```
+# Voltar para commit específico
+git reset --hard abc1234
 
-### Descartar alterações em um arquivo (volta ao último commit)
-```bash
-git restore arquivo.c
-```
-
-### Corrigir a mensagem do último commit
-```bash
-git commit --amend -m "mensagem corrigida"
-```
-
-### Adicionar arquivo esquecido ao último commit
-```bash
-git add arquivo_esquecido.c
-git commit --amend --no-edit
-```
-
-### Voltar para um commit específico (sem perder histórico)
-```bash
+# Criar commit que desfaz outro (seguro para remoto)
 git revert abc1234
+git revert HEAD                                  # Reverte último commit
+git revert HEAD~3..HEAD                          # Reverte últimos 3 commits
+
+# Recuperar arquivo deletado
+git checkout HEAD -- arquivo.py
+git restore --source=HEAD~1 arquivo.py           # De commit anterior
 ```
 
-### Ver quem alterou cada linha de um arquivo
-```bash
-git blame arquivo.c
-```
+---
 
-### Buscar em qual commit um bug foi introduzido
+## 🔎 11. BUSCA NO HISTÓRICO
+
 ```bash
+# Buscar texto em todos os arquivos
+git grep "senha"
+git grep -n "TODO"                               # Mostra número da linha
+git grep -i "password"                           # Case insensitive
+
+# Buscar em qual commit um texto apareceu
+git log -S "texto_buscado" --oneline
+
+# Buscar por mensagem de commit
+git log --grep="fix"
+git log --grep="feat" --oneline
+
+# Descobrir quem modificou uma linha (blame)
+git blame arquivo.py
+git blame -L 10,20 arquivo.py                    # Só linhas 10 a 20
+
+# Bissect — encontrar qual commit causou um bug
 git bisect start
-git bisect bad         # commit atual tem o bug
-git bisect good v1.0   # essa versão estava ok
+git bisect bad                                   # Commit atual tem o bug
+git bisect good abc1234                          # Esse commit estava bom
+# Git vai navegando automaticamente
+git bisect reset                                 # Finaliza bisect
 ```
 
 ---
 
-## ⚔️ 10. Resolvendo Conflitos de Merge
-
-Quando dois commits alteram o mesmo trecho de código, o Git marca o conflito assim:
-
-```
-<<<<<<< HEAD
-  seu código atual
-=======
-  código que veio do merge
->>>>>>> nome-da-branch
-```
-
-**Passo a passo para resolver:**
+## 📦 12. SUBMODULES
 
 ```bash
-# 1. Veja quais arquivos têm conflito
-git status
+# Adicionar submodule
+git submodule add https://github.com/user/repo libs/repo
 
-# 2. Abra os arquivos marcados e edite manualmente
-#    Escolha qual versão manter e apague as marcações
+# Clonar repositório com submodules
+git clone --recurse-submodules https://github.com/user/repo
 
-# 3. Após corrigir, adicione os arquivos resolvidos
-git add arquivo_resolvido.c
+# Atualizar submodules
+git submodule update --init --recursive
+git submodule update --remote                    # Atualiza para último commit
 
-# 4. Finalize o merge
-git commit -m "fix: resolve conflito no arquivo.c"
+# Remover submodule
+git submodule deinit libs/repo
+git rm libs/repo
 ```
 
 ---
 
-## 🗑️ 11. Limpeza e Manutenção
+## 🛠️ 13. RESOLVENDO PROBLEMAS
 
 ```bash
-# Remove arquivos não rastreados do diretório
-git clean -f
+# ---- Conflito de merge ----
+# 1. Abrir arquivo com conflito
+# 2. Editar manualmente — remover marcações <<< === >>>
+# 3. Salvar o arquivo
+git add arquivo_resolvido.py
+git commit -m "fix: resolve conflito no merge"
 
-# Remove arquivos e pastas não rastreados
-git clean -fd
-
-# Visualiza o que seria removido antes de limpar
-git clean -n
-
-# Otimiza o repositório local
-git gc
-```
-
----
-
-## 🔍 12. Busca e Inspeção
-
-```bash
-# Busca um texto em todos os arquivos do projeto
-git grep "nome_da_funcao"
-
-# Mostra detalhes de um commit específico
-git show abc1234
-
-# Mostra o conteúdo de um arquivo em outro commit
-git show abc1234:arquivo.c
-
-# Compara duas branches
-git diff main..minha-branch
-```
-
----
-
-## 🌐 13. Fluxo Completo no GitHub
-
-```bash
-# 1. Clonar o repositório
-git clone https://github.com/usuario/projeto.git
-
-# 2. Criar branch para sua feature
-git checkout -b feature/formulario-cadastro
-
-# 3. Fazer alterações e commitar
-git add .
-git commit -m "feat: adiciona formulario de cadastro"
-
-# 4. Enviar branch para o GitHub
-git push origin feature/formulario-cadastro
-
-# 5. Abrir Pull Request no GitHub (pela interface web)
-
-# 6. Após aprovação, atualizar o main local
+# ---- Commit no branch errado ----
+# Mover último commit para outra branch
+git checkout branch-correta
+git cherry-pick main
 git checkout main
-git pull
+git reset --hard HEAD~1
 
-# 7. Deletar a branch usada
-git branch -d feature/formulario-cadastro
+# ---- Esqueceu de adicionar arquivo no último commit ----
+git add arquivo_esquecido.py
+git commit --amend --no-edit                     # Adiciona sem mudar mensagem
+
+# ---- Push rejeitado (remote à frente do local) ----
+git pull --rebase origin main
+git push origin main
+
+# ---- Repositório corrompido ----
+git fsck                                         # Verifica integridade
+git gc                                           # Coleta lixo e otimiza
+
+# ---- Limpar arquivos não rastreados ----
+git clean -n                                     # Simula o que seria removido
+git clean -f                                     # Remove arquivos não rastreados
+git clean -fd                                    # Remove arquivos e pastas
+git clean -fdx                                   # Inclui arquivos no .gitignore
+
+# ---- Recuperar branch deletada por acidente ----
+git reflog                                       # Mostra todo o histórico
+git checkout -b branch-recuperada abc1234        # Recria do hash encontrado
+
+# ---- Desfazer push já enviado ao GitHub ----
+git revert HEAD
+git push origin main
+# Nunca usar git push --force em branch compartilhada
+
+# ---- Arquivo grande bloqueando push ----
+git rm --cached arquivo-grande.zip
+echo "arquivo-grande.zip" >> .gitignore
+git commit -m "fix: remove arquivo grande do tracking"
+
+# ---- Ver o que foi deletado no histórico ----
+git log --diff-filter=D --summary               # Commits que deletaram arquivos
+git show abc1234 -- arquivo-deletado.py         # Ver conteúdo antes de deletar
 ```
 
 ---
 
-## 📄 14. .gitignore — Ignorar Arquivos
+## 📄 14. .GITIGNORE
 
-Crie um arquivo chamado `.gitignore` na raiz do projeto:
+```bash
+# Criar .gitignore
+touch .gitignore
 
+# Parar de rastrear arquivo já commitado
+git rm --cached arquivo.py
+git rm --cached -r pasta/
+
+# Verificar por que um arquivo está sendo ignorado
+git check-ignore -v arquivo.py
+
+# Modelo de .gitignore para projetos de segurança / Python:
 ```
-# Executáveis compilados
-*.exe
-*.out
-programa
 
-# Arquivos de objeto
-*.o
-*.a
+```gitignore
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+.venv/
 
-# Pastas de build
-build/
-Debug/
-Release/
+# Segurança — NUNCA commitar
+*.key
+*.pem
+*.cert
+*.pfx
+id_rsa
+id_ed25519
+.env
+config.ini
+secrets.yaml
+passwords.txt
 
-# Arquivos de sistema
+# Capturas de rede
+*.pcap
+*.pcapng
+
+# Sistemas
 .DS_Store
 Thumbs.db
+*.log
 
-# Configurações locais do VS Code
+# IDEs
 .vscode/
+.idea/
+*.swp
 ```
+
+---
+
+## 💡 15. BOAS PRÁTICAS DE COMMIT
 
 ```bash
-# Após criar o .gitignore, adicione e commite
-git add .gitignore
-git commit -m "chore: adiciona gitignore"
+# Padrão Conventional Commits — muito usado na área
+feat:     nova funcionalidade
+fix:      correção de bug
+docs:     documentação
+style:    formatação, sem mudança de lógica
+refactor: refatoração de código
+test:     adição de testes
+chore:    tarefas de manutenção
+
+# Exemplos reais:
+git commit -m "feat: adiciona port scanner com threading"
+git commit -m "fix: corrige timeout no scan UDP"
+git commit -m "docs: adiciona README do xor_encryptor"
+git commit -m "chore: adiciona .gitignore para arquivos .pcap"
 ```
 
 ---
 
-## ⚡ 15. Atalhos Úteis (Aliases)
+## 🚀 16. FLUXO COMPLETO — DO ZERO AO GITHUB
 
 ```bash
-# Cria atalhos para comandos longos
-git config --global alias.st status
-git config --global alias.lg "log --oneline --graph --all"
-git config --global alias.undo "reset --soft HEAD~1"
+# 1. Criar repositório local
+git init meu-projeto
+cd meu-projeto
 
-# Uso após configurar:
-git st       # equivale a: git status
-git lg       # equivale a: git log --oneline --graph --all
-git undo     # equivale a: git reset --soft HEAD~1
+# 2. Criar arquivo inicial
+echo "# Meu Projeto" > README.md
+
+# 3. Primeiro commit
+git add .
+git commit -m "feat: commit inicial"
+
+# 4. Conectar ao GitHub
+git remote add origin git@github.com:felipeds-cdc/meu-projeto.git
+
+# 5. Enviar
+git push -u origin main
+
+# --- Fluxo diário ---
+git pull origin main                             # Sempre atualizar antes
+# ... faz modificações ...
+git add .
+git commit -m "feat: descreve o que fez"
+git push origin main
 ```
 
 ---
 
-## 📊 Resumo Rápido — Comandos Mais Usados
-
-| Comando | O que faz |
-|---------|-----------|
-| `git init` | Inicia repositório |
-| `git clone <url>` | Clona do GitHub |
-| `git status` | Ver estado atual |
-| `git add .` | Adiciona tudo ao stage |
-| `git commit -m ""` | Salva um commit |
-| `git push` | Envia para o GitHub |
-| `git pull` | Baixa do GitHub |
-| `git branch` | Lista branches |
-| `git checkout -b` | Cria e troca de branch |
-| `git merge` | Une branches |
-| `git stash` | Guarda mudanças temporárias |
-| `git log --oneline` | Histórico resumido |
-| `git reset --soft HEAD~1` | Desfaz último commit |
-| `git restore arquivo` | Descarta alterações |
+## ⚠️ Aviso Legal
+> Nunca commitar senhas, chaves privadas,
+> tokens de API ou arquivos .env.
+> Use sempre o .gitignore para proteger
+> informações sensíveis.
+```
 
 ---
 
-*Guia criado para uso diário em projetos com Git e GitHub*
+Salve como `cheatsheets/git-github.md` no repositório. Seu portfólio agora tem:
+
+| Arquivo | Conteúdo |
+|---|---|
+| `cheatsheets/kali-commands.md` | Comandos gerais do Kali |
+| `cheatsheets/pentest-phases.md` | Fases do pentest |
+| `cheatsheets/mysql-commands.md` | Comandos MySQL |
+| `cheatsheets/git-github.md` | Git e GitHub |
+| `scripts/port_scanner.py` | Port scanner em Python |
+| `scripts/xor_encryptor.c` | Criptografador XOR em C |
+
+Quer que eu escreva agora o **template de writeup** para documentar suas práticas no TryHackMe?
